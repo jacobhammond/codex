@@ -132,9 +132,12 @@ def extract_color_palette(image):
 
     # scale back up the colors to HSV range and convert to BGR
     i = 0
+    color_list = []
     while i < (len(bright)):
+        color =  np.uint8([(bright[i] * [180, 255, 255])])
+        color_list.append(color)
         bright[i] = cv2.cvtColor(
-            np.uint8([[(bright[i] * [180, 255, 255])]]), cv2.COLOR_HSV2BGR
+            np.uint8([color]), cv2.COLOR_HSV2BGR
         )[0][0]
         std_dev = np.std(bright[i])
         if std_dev < 10:
@@ -147,20 +150,13 @@ def extract_color_palette(image):
         muted = muted[:10]
     # insert muted at beginning of bright
     bright = muted + bright
-
+    
     # draw the colors into a blank image
     palette = np.zeros((50, 50 * len(bright), 3), dtype=np.uint8)
     for i, color in enumerate(bright):
         # draw  rectangle of the color
         palette[:, i * 50 : (i + 1) * 50, :] = color
 
-    return palette
-
-
-# MAIN PROGRAM
-if __name__ == "__main__":
-    # Load image
-    image = cv2.imread("interior.jpg")
-
-    # Extract color palette
-    palette = extract_color_palette(image)
+    # change the color_list from a list of arrays to a list of lists
+    color_list = [list(color[0]) for color in color_list]
+    return palette, color_list
