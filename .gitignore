@@ -10,6 +10,7 @@ __pycache__/
 *.png
 *.jpg
 *.vsdx
+.vscode/
 
 # Distribution / packaging
 .Python
