@@ -1,13 +1,25 @@
-train: ../train/images
-val: ../valid/images
-test: ../test/images
+path: ../object-training/
+train: train
+val: valid
+test: test
 
-nc: 18
-names: ['armchair', 'bed', 'ceiling-light', 'chair', 'clock', 'couch', 'curtain', 'dresser', 'lamp', 'pillow', 'plant', 'rug', 'shelf', 'side-table', 'stool', 'table', 'vase', 'wall-art']
-
-roboflow:
-  workspace: codex-pi8qh
-  project: codex-seg
-  version: 2
-  license: CC BY 4.0
-  url: https://universe.roboflow.com/codex-pi8qh/codex-seg/dataset/2
+# Classes
+names: 
+  0: armchair
+  1: bed
+  2: ceiling-light
+  3: chair
+  4: clock
+  5: couch
+  6: curtain
+  7: dresser
+  8: lamp
+  9: pillow
+  10: plant
+  11: rug
+  12: shelf
+  13: side-table
+  14: stool
+  15: table
+  16: vase
+  17: wall-art

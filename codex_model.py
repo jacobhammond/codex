@@ -8,23 +8,23 @@ os.environ["ULTRALYITICS_DIR"]="./datasets/object-training/"
 
 def train_model():
     # check if segment training run already exists (if not, train the model)
-    if not os.path.exists("datasets/object-training/runs/"):
-
-        # Build a new YOLO model using the CODEX dataset
-        model = YOLO('datsaets/object-training/data.yaml')
+    if not os.path.exists("./runs"):
+        # Load a YOLO model to train
+        model = YOLO('datasets/object-training/yolov8n-seg.pt')
 
         # Now train the YOLO model using the custom CODEX dataset
-        results = model.train(data='codex.yaml', epochs=20, batch=1024, imgsz=320, cache=True, device="cpu", workers=28)
+        results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=50, batch=1024, imgsz=320, cache=True, device="cpu", workers=28)
 
         # Export the trained model (will save to runs directory)
         model.export(include="torchscript", weights="weights/best.pt")
     else:
         # apply the custom CODEX dataset to the model weights
-        model = YOLO('datasets/object-training/runs/segment/train/weights/best.pt')
+        model = YOLO('datasets/object-training/yolov8n-seg.pt')
+        model = YOLO('runs/segment/train/weights/best.pt')
 
     # Test the model using a test codex dataset interior image
     # load the image
-    img = cv2.imread(f"datasets/interiors/interior5.jpg")
+    img = cv2.imread(f"datasets/examples/interior3.jpg")
     # predict the image
     results = model(img)
     # draw the bounding boxes/segmentation
