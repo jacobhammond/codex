@@ -7,8 +7,6 @@ __pycache__/
 *.so
 
 # images files
-*.png
-*.jpg
 *.vsdx
 .vscode/
 yolov8n.pt
