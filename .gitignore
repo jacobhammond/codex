@@ -11,6 +11,11 @@ __pycache__/
 *.jpg
 *.vsdx
 .vscode/
+yolov8n.pt
+yolov8n-seg.pt
+runs/
+datasets/object-training/train.cache
+datasets/object-training/validate.cache
 
 # Distribution / packaging
 .Python
