@@ -4,45 +4,39 @@ import os
 import sys
 from ultralytics import YOLO
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+os.environ["ULTRALYITICS_DIR"]="./datasets/object-training/"
 
 def train_model():
-    # Load a model
-    model = YOLO('yolov8n-seg.yaml')  # build a new model from YAML
-    model = YOLO('yolov8n-seg.pt')  # load a pretrained model (recommended for training)
-    model = YOLO('yolov8n-seg.yaml').load('yolov8n.pt')  # build from YAML and transfer weights
+    # check if segment training run already exists (if not, train the model)
+    if not os.path.exists("datasets/object-training/runs/segment/train"):
+        # Train the model using the codex dataset
+        # Fetch YOLO model to train
+        model = YOLO('datasets/object-training/yolov8n-seg.yaml')  # build a new model from YAML
+        model = YOLO('datasets/object-training/yolov8n-seg.pt')  # load a pretrained YOLO model as a base
+        model = YOLO('yolov8n-seg.yaml').load('datasets/object-training/yolov8n.pt')  # build from YAML and transfer existing weights
 
-    # Train the model using the codex dataset
-    results = model.train(data='datasets/codex.yaml', epochs=100, imgsz=640)
-    # save the model
-    model.save('datasets/codex.pt')
+        # Now train the YOLO model using the custom CODEX dataset
+        results = model.train(data='codex.yaml', epochs=20, batch=1024, imgsz=320, cache=True, device="cpu", workers=28)
 
-    # validate the model using the codex dataset
-    model = YOLO('yolov8n-seg.pt')  # load an official model
-    model = YOLO('datasets/codex.pt')  # load a custom model
-    metrics = model.val()
-    metrics.box.map
-    metrics.box.map50
-    metrics.box.map75
-    metrics.box.maps
-    metrics.seg.map
-    metrics.seg.map50
-    metrics.seg.map75
-    metrics.seg.maps
+        # Export the trained model (will save to runs directory)
+        model.export(include="torchscript", weights="weights/best.pt")
+    else:
+        # load base YOLO segmentation model
+        model = YOLO('datasets/object-training/yolov8n-seg.pt')
+        # apply the custom CODEX dataset to the model weights
+        #model = YOLO('datasets/object-training/runs/segment/train/weights/best.pt')
+     
 
-    # save the model after validation again
-    model.save('codex.pt')
-
-    # Test the model using the codex dataset interior images
-    for image in os.listdir("datasets/interiors/"):
-        # load the image
-        img = cv2.imread(f"datasets/interiors/{image}")
-        # predict the image
-        results = model(img)
-        # draw the bounding boxes/segmentation
-        annotated = results[0].plot()
-        # display the image
-        cv2.imshow("CODEX Model Segmentation", annotated)
-        cv2.waitKey(0)
+    # Test the model using a test codex dataset interior image
+    # load the image
+    img = cv2.imread(f"datasets/interiors/interior5.jpg")
+    # predict the image
+    results = model(img)
+    # draw the bounding boxes/segmentation
+    annotated = results[0].plot()
+    # display the image
+    cv2.imshow("CODEX Model Segmentation", annotated)
+    cv2.waitKey(0)
 
 
 # This function was only run at the start of the project to generate the training data for the object detection model
