@@ -8,12 +8,10 @@ os.environ["ULTRALYITICS_DIR"]="./datasets/object-training/"
 
 def train_model():
     # check if segment training run already exists (if not, train the model)
-    if not os.path.exists("datasets/object-training/runs/segment/train"):
-        # Train the model using the codex dataset
-        # Fetch YOLO model to train
-        model = YOLO('datasets/object-training/yolov8n-seg.yaml')  # build a new model from YAML
-        model = YOLO('datasets/object-training/yolov8n-seg.pt')  # load a pretrained YOLO model as a base
-        model = YOLO('yolov8n-seg.yaml').load('datasets/object-training/yolov8n.pt')  # build from YAML and transfer existing weights
+    if not os.path.exists("datasets/object-training/runs/"):
+
+        # Build a new YOLO model using the CODEX dataset
+        model = YOLO('datsaets/object-training/data.yaml')
 
         # Now train the YOLO model using the custom CODEX dataset
         results = model.train(data='codex.yaml', epochs=20, batch=1024, imgsz=320, cache=True, device="cpu", workers=28)
@@ -21,11 +19,8 @@ def train_model():
         # Export the trained model (will save to runs directory)
         model.export(include="torchscript", weights="weights/best.pt")
     else:
-        # load base YOLO segmentation model
-        model = YOLO('datasets/object-training/yolov8n-seg.pt')
         # apply the custom CODEX dataset to the model weights
-        #model = YOLO('datasets/object-training/runs/segment/train/weights/best.pt')
-     
+        model = YOLO('datasets/object-training/runs/segment/train/weights/best.pt')
 
     # Test the model using a test codex dataset interior image
     # load the image
@@ -41,7 +36,8 @@ def train_model():
 
 # This function was only run at the start of the project to generate the training data for the object detection model
 # it uses the object-training dataset to create a list of training objects, each with an image, mask, bounding coordinates, category, category index, and filename
-# it then saves the mask and bounding coordinates to a txt file with the same name as the image file to be used as training data
+# it then saves the mask and bounding coordinates to a txt file with the same name as the image file to be used as training data. 
+# I abandoned this method in favor of using roboflow to create my own custom dataset and add segmentations, but I left this function here for reference
 def create_training_obj_segments():
     class training_object:
         def __init__(self, category, category_index, filename, image, mask, bounding_coords):

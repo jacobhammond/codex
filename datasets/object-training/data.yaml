@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 18
+names: ['armchair', 'bed', 'ceiling-light', 'chair', 'clock', 'couch', 'curtain', 'dresser', 'lamp', 'pillow', 'plant', 'rug', 'shelf', 'side-table', 'stool', 'table', 'vase', 'wall-art']
+
+roboflow:
+  workspace: codex-pi8qh
+  project: codex-seg
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/codex-pi8qh/codex-seg/dataset/2
