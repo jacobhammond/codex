@@ -13,7 +13,7 @@ def train_model():
         model = YOLO('datasets/object-training/yolov8n-seg.pt')
 
         # Now train the YOLO model using the custom CODEX dataset
-        results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=100, batch=512, imgsz=640, cache=True, device="cpu", workers=28)
+        results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=50, batch=160, imgsz=640, cache=True, device="cpu", workers=30)
 
         # Export the trained model (will save to runs directory)
         model.export(include="torchscript", weights="weights/best.pt")

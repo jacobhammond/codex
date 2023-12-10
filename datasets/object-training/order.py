@@ -60,6 +60,8 @@ def shorten_filenames():
     directory_paths = ['./train', './valid']
     for directory in directory_paths:
         for root, dirs, files in os.walk(directory):
+            #sort the files in the directory
+            files.sort()
             for filename in files:
                 # get the file extension
                 ext = os.path.splitext(filename)[1]
@@ -73,6 +75,6 @@ def shorten_filenames():
 
 
 if __name__ == '__main__':
-    #rename_sort_files()
-    shorten_filenames()
+    rename_sort_files()
+    #shorten_filenames()
 
