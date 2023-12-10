@@ -3,6 +3,7 @@ import numpy as np
 import os
 import sys
 from ultralytics import YOLO
+from ultralytics import engine
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 os.environ["ULTRALYITICS_DIR"]="./datasets/object-training/"
 
@@ -15,12 +16,12 @@ def train_model():
         # Now train the YOLO model using the custom CODEX dataset
         results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=50, batch=160, imgsz=640, cache=True, device="cpu", workers=30)
 
-        # Export the trained model (will save to runs directory)
-        model.export(include="torchscript", weights="weights/best.pt")
+        # Export the trained model
+        model.save("datasets/object-training/codex.pt")
     else:
         # apply the custom CODEX dataset to the model weights
         model = YOLO('datasets/object-training/yolov8n-seg.pt')
-        model = YOLO('runs/segment/train/weights/best.pt')
+        model = YOLO('datasets/object-training/codex.pt')
 
     # Test the model using a test codex dataset interior image
     # load the image
