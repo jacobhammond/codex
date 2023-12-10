@@ -7,13 +7,13 @@ test: test
 names: 
   0: armchair
   1: bed
-  2: ceiling-light
-  3: chair
-  4: clock
-  5: couch
-  6: curtain
-  7: dresser
-  8: lamp
+  2: chair
+  3: clock
+  4: couch
+  5: curtain
+  6: dresser
+  7: lamp
+  8: light
   9: pillow
   10: plant
   11: rug

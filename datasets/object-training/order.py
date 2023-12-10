@@ -35,6 +35,7 @@ def rename_sort_files():
         os.rename(os.path.join(directory_paths[1], b_file), os.path.join(directory_paths[1], new2))
         count += 1
     
+    '''
     # sort test images last, keep counter running
     directory_paths = ['./test/images', './test/labels'] 
     file1 = os.listdir(directory_paths[0])
@@ -49,13 +50,14 @@ def rename_sort_files():
         os.rename(os.path.join(directory_paths[0], a_file), os.path.join(directory_paths[0], new1))
         os.rename(os.path.join(directory_paths[1], b_file), os.path.join(directory_paths[1], new2))
         count += 1
+    '''
 
 def shorten_filenames():
 
     #for all files in train, valid, and test directories
     # recursively search through all directories and shorten all filenames to 16 characters or less
 
-    directory_paths = ['./train', './valid', './test']
+    directory_paths = ['./train', './valid']
     for directory in directory_paths:
         for root, dirs, files in os.walk(directory):
             for filename in files:
@@ -70,8 +72,7 @@ def shorten_filenames():
 
 
 
-
 if __name__ == '__main__':
-    rename_sort_files()
-    #shorten_filenames()
+    #rename_sort_files()
+    shorten_filenames()
 
