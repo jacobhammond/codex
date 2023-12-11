@@ -1,9 +1,16 @@
-# CODEX
-CODEX - Color/Object Detection and Extraction
+# CODEX: Color-Object Detection & Extraction
 
-Author: Jacob Hammond
+![logo](examples/logo.png)
 
-Description: 
+## Table of Contents
+
++ [About](#about)   
+   +[The CODEX Segmentation Model](#the-codex-segmentation-model)
++ [Requirements](#requirements)
++ [Instructions & Usage](#instructions--usage)
+
+
+## About<a name = "about"></a>
 
 This program is the main executable for CODEX - Color-Object Detection and EXtraction.
 It is a tool for interior designers or hobbyists to input an image of an interior space
@@ -30,7 +37,7 @@ with multiple objects, and then be able to decide which object(s) would be the b
 their interior space.
 
             
-Notes on the CODEX segmentation model:
+## The CODEX Segmentation model:  <a name = "about_model"></a>
 
 The model was developed using a custom dataset that I created using Roboflow.
 This allowed me to select a large amount of data from images that are FOSS around 
@@ -51,43 +58,55 @@ the user to train the model themselves.
 
         There are 16 supported object categories in the CODEX model:
 
-        'bed', 'chair', 'clock', 'couch', 'curtain', 'dresser', 'lamp', 'light', 
+        'bed' 'chair', 'clock', 'couch', 'curtain', 'dresser', 'lamp', 'light', 
         'pillow', 'plant', 'rug', 'shelf', 'stool', 'table', 'vase', 'wall-art'
 
-There determination for color matching results is based on a weighted score 
+The determination for color matching results is based on a weighted score 
 of the relatedness of the objects most common HSV colors to the interior palette. 
 A score greater than 0.5 is considered a match, and therefore a good fit for the
 interior space.
 
-Dependencies: 
+The `codex_segmentation_v5` model and training dataset is hosted and available for download on roboflow. Reminder that downloading the raw dataset or model is NOT required. The trained CODEX segmentation model and weights are included in this repository. 
+&emsp;   
+<p align='center'>
+<a href="https://universe.roboflow.com/codex-oqz5i/codex_segmentation_v5">
+    <img src="https://app.roboflow.com/images/download-dataset-badge.svg"></img>
+</a>   
+&emsp; &emsp;
+<a href="https://universe.roboflow.com/codex-oqz5i/codex_segmentation_v5/model/">
+    <img src="https://app.roboflow.com/images/try-model-badge.svg"></img>
+</a>
+</p>
 
-This project was developed on Python 3.11.5. Additional packages are listed in 
-requirements.txt and can be installed using pip.
+## Requirements:  <a name = "req"></a>
 
-Addditional Documentation, source code, and raw training dataset:
+This project was developed on `Python 3.11.5`. Additional packages are listed in 
+`requirements.txt` and can be installed using pip.
 
-https://github.com/jhammo32/codex   
-https://universe.roboflow.com/codex-oqz5i/codex_segmentation_v5
+Addditional documentation available at
 
+(overlef)
+
+## Instructions & Usage  <a name = "instructions"></a>
 Project Files: 
 
-- codex.py - main executable
-- codex_common.py - common functions used by codex.py
-- codex_model.py - model training and testing functions
-- examples - directory for example inputs 
-- codex.pt - CODEX segmentation model 
-- yolov8m-seg.py - YOLOv8 MS COCO Pre-trained segmentation model
-- requirements.txt - list of dependencies
+- `codex.py` - main executable
+- `codex_common.py` - common functions used by codex.py
+- `codex_model.py` - model training and testing functions
+- `examples` - directory for example inputs 
+- `codex.pt` - CODEX segmentation model 
+- `yolov8m-seg.py` - YOLOv8 MS COCO Pre-trained segmentation model
+- `requirements.txt` - list of dependencies
 
 Usage:
 
-   > python codex.py <interior_image_file> <object_of_interest_image_file>
+   > python codex.py <reference_image_file> <object_of_interest_image_file>
 
-  to use included sample images:
+  Arguments are optional. If ommited, the program will use included sample images:
 
    > python codex.py
 
 Usage Example:
 
-    python codex.py interior.jpg  couch.jpg
+> python codex.py interior.jpg  couch.jpg
 
