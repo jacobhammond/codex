@@ -1,3 +1,8 @@
+# File: codex_model.py (vestigial, not used for runtime execution but provided as artifact of development)
+# Author: Jacob Hammond
+# Date: 12/10/2023
+# Description: This file contains the code for training the CODEX model on a custom dataset
+
 import cv2
 import numpy as np
 import os
@@ -5,40 +10,45 @@ import sys
 from ultralytics import YOLO
 from ultralytics import engine
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-os.environ["ULTRALYITICS_DIR"]="./datasets/object-training/"
+os.environ["ULTRALYITICS_DIR"]="./datasets/object_training/"
 
+# This function trains the CODEX model using the custom CODEX dataset on a base YOLO model trained on the COCO dataset for segmentation
 def train_model():
     # check if segment training run already exists (if not, train the model)
     if not os.path.exists("./runs"):
         # Load a YOLO model to train
-        model = YOLO('datasets/object-training/yolov8m-seg.pt')
+        model = YOLO('datasets/object_training/yolov8m-seg.pt')
 
         # Now train the YOLO model using the custom CODEX dataset
-        results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=100, batch=128, imgsz=640, cache=True, device="cpu", workers=30)
+        results = model.train(data='datasets/object_training/data.yaml', task='segment', epochs=100, batch=128, imgsz=640, cache=True, device="cpu", workers=30)
 
         # Export the trained model
-        model.save("datasets/object-training/codex.pt")
+        model.save("datasets/object_training/codex.pt")
     else:
         # apply the custom CODEX dataset to the model weights
-        model = YOLO('datasets/object-training/yolov8m-seg.pt')
-        model = YOLO('datasets/object-training/codex.pt')
+        model = YOLO('datasets/object_training/yolov8m-seg.pt')
+        model = YOLO('datasets/object_training/codex.pt')
 
     # Test the model using a test codex dataset interior image
     # load the image
-    img = cv2.imread(f"datasets/examples/interior3.jpg")
+    #img = cv2.imread(f"datasets/examples/interior3.jpg")
     # predict the image
-    results = model(img)
+    #results = model(img)
     # draw the bounding boxes/segmentation
-    annotated = results[0].plot()
+    #annotated = results[0].plot()
     # display the image
-    cv2.imshow("CODEX Model Segmentation", annotated)
-    cv2.waitKey(0)
+    #cv2.imshow("CODEX Model Segmentation", annotated)
+    #cv2.waitKey(0)
 
 
 # This function was only run at the start of the project to generate the training data for the object detection model
-# it uses the object-training dataset to create a list of training objects, each with an image, mask, bounding coordinates, category, category index, and filename
+# it uses the object training dataset to create a list of training objects, each with an image, mask, bounding coordinates, 
+# category, category index, and filename
+#
 # it then saves the mask and bounding coordinates to a txt file with the same name as the image file to be used as training data. 
-# I abandoned this method in favor of using roboflow to create my own custom dataset and add segmentations, but I left this function here for reference
+# I started out building my dataset from scratch this way, and it turned out to be quite tedious, so I switched to using roboflow to create my dataset
+# I left this function here for reference if you want to create your own dataset from scratch. A large chunk of my training images in the current
+# dataset were actually created using this function. 
 def create_training_obj_segments():
     class training_object:
         def __init__(self, category, category_index, filename, image, mask, bounding_coords):
@@ -48,18 +58,18 @@ def create_training_obj_segments():
             self.category = category
             self.category_index = category_index
             self.filename = filename
-    # create a list of object directories (to be used as labels too) in object-training dataset
-    object_dir = os.listdir("datasets/object-training/")
+    # create a list of object directories (to be used as labels too) in object training dataset
+    object_dir = os.listdir("datasets/object_training/")
 
     # import the images in each folder into a list of images
     dataset = []
     index = 0
     for category in object_dir:
-        file_list = os.listdir(f"datasets/object-training/{category}")
+        file_list = os.listdir(f"datasets/object_training/{category}")
         #print(f"{index}: {category}", end="\n")
         for filename in file_list:
             # create training object instance
-            training_object_instance = training_object(category, index, filename, cv2.imread(f"datasets/object-training/{category}/{filename}"), None, None)
+            training_object_instance = training_object(category, index, filename, cv2.imread(f"datasets/object_training/{category}/{filename}"), None, None)
             dataset.append(training_object_instance)
             
         index += 1
@@ -112,26 +122,26 @@ def create_training_obj_segments():
         # join the category indext to beginning of bounding coordinates
         bounding_coords = f"{training_object_instance.category_index} {bounding_coords}"
         # create a txt file with the same name as the image file
-        f = open(f"datasets/object-training/{training_object_instance.category}/{training_object_instance.filename[:-4]}.txt", "w")
+        f = open(f"datasets/object_training/{training_object_instance.category}/{training_object_instance.filename[:-4]}.txt", "w")
         # write the bounding coordinates to the file
         f.write(bounding_coords)
         # close the file
         f.close()
 
     # create train and validate folders, move 80% of images to train folder and 20% to validate folder
-    os.mkdir("datasets/object-training/train")
-    os.mkdir("datasets/object-training/validate")
+    os.mkdir("datasets/object_training/train")
+    os.mkdir("datasets/object_training/validate")
     for category in object_dir:
-        file_list = os.listdir(f"datasets/object-training/{category}")
+        file_list = os.listdir(f"datasets/object_training/{category}")
         # copy 80% of the images to train folder
         for filename in file_list[:int(len(file_list) * 0.8)]:
-            os.rename(f"datasets/object-training/{category}/{filename}", f"datasets/object-training/train/{filename}")
+            os.rename(f"datasets/object_training/{category}/{filename}", f"datasets/object_training/train/{filename}")
         # copy 20% of the images to validate folder
         for filename in file_list[int(len(file_list) * 0.8):]:
-            os.rename(f"datasets/object-training/{category}/{filename}", f"datasets/object-training/validate/{filename}")
+            os.rename(f"datasets/object_training/{category}/{filename}", f"datasets/object_training/validate/{filename}")
     # cleanup directory and remove empty folders
     for category in object_dir:
-        os.rmdir(f"datasets/object-training/{category}")
+        os.rmdir(f"datasets/object_training/{category}")
 
 #create_training_obj_segments()
 train_model()

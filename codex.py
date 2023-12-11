@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-
 '''
-Program: codex.py
+File: codex.py (TOP LEVEL)
 Author: Jacob Hammond
 Date: 12/10/2023
 
@@ -59,7 +58,7 @@ Notes on the CODEX segmentation model:
 Dependencies: 
 
         This project was developed on Python 3.11.5. Additional packages are listed in 
-        requirements.txt and automatically installed via pip in a virtual environment.
+        requirements.txt and can be installed using pip.
 
 Addditional Documentation, source code, and dataset:
 
@@ -89,41 +88,48 @@ Usage Example:
     python codex.py interior.jpg  couch.jpg
 
   '''
-
-# setup virtual environment, dependencies, and imports
-import codex_common as codex
-codex.setup()
+import sys
+import os
 
 # MAIN PROGRAM
 if __name__ == '__main__':
+    # check that requirements are installed
+    try:
+        import cv2
+        import numpy as np
+        import codex_common as codex
+    except ImportError:
+        print("\n\n\t*** Missing packages! Please install requirements using pip install -r requirements.txt ***\n\n")
+        sys.exit(1)
 
     # check sys args for interior image file, and object of interest
     if len(sys.argv) == 3:
-        image_file = sys.argv[1]
-        object_of_interest = sys.argv[2]
+        ref_file = sys.argv[1]
+        object_file = sys.argv[2]
     # otherwise if not provided, use a sample included in the project
     else:
         print("No input args with image files provided, using sample image set")
-        image_file = "datasets/examples/interior3.jpg"
-        object_of_interest = "datasets/examples/sofa.jpg"
+        ref_file = "datasets/examples/interior1.jpg"
+        object_file = "datasets/examples/interior0.jpg"
 
 
     # load the interior image 
-    image = cv2.imread(image_file)
+    ref_image = cv2.imread(ref_file)
 
     # call the extract_color_palette function
-    palette, hsv_colors = codex.extract_color_palette(image)
+    ref_palette, ref_hsv_colors = codex.extract_color_palette(ref_image)
 
     # Initialize an instance of the InteriorPalette class
-    codex.InteriorPalette(image_file, image, hsv_colors, palette)
+    ref = codex.ReferencePalette(ref_file, ref_image, ref_hsv_colors, ref_palette)
 
     # load the object of interest image
-    object_of_interest = cv2.imread(object_of_interest)
+    object_image = cv2.imread(object_file)
 
-    # Extract objects
-    objects = codex.get_obj_mask(image)
+    # Apply the CODEX segmentation model to the object image
+    segmented_objects = codex.isolating_seg_objects(object_image)
 
+    # get color matching results for segmented objects versus the reference
+    segmented_results = codex.color_match(ref, segmented_objects)
 
-
-    # Deactivate virtual environment
-    os.system("deactivate")
+    # display the results
+    codex.display_results(ref, segmented_results)

@@ -14,6 +14,7 @@ yolov8n-seg.pt
 runs/
 datasets/object-training/train.cache
 datasets/object-training/validate.cache
+codex-env/
 
 # Distribution / packaging
 .Python
