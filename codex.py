@@ -55,6 +55,11 @@ Notes on the CODEX segmentation model:
         'bed', 'chair', 'clock', 'couch', 'curtain', 'dresser', 'lamp', 'light', 
         'pillow', 'plant', 'rug', 'shelf', 'stool', 'table', 'vase', 'wall-art'
 
+        There determination for color matching results is based on a weighted score 
+        of the relatedness of the objects most common HSV colors to the interior palette. 
+        A score greater than 0.5 is considered a match, and therefore a good fit for the
+        interior space.
+
 Dependencies: 
 
         This project was developed on Python 3.11.5. Additional packages are listed in 
@@ -109,8 +114,8 @@ if __name__ == '__main__':
     # otherwise if not provided, use a sample included in the project
     else:
         print("No input args with image files provided, using sample image set")
-        ref_file = "datasets/examples/interior1.jpg"
-        object_file = "datasets/examples/interior0.jpg"
+        ref_file = "datasets/examples/interior5.jpg"
+        object_file = "datasets/examples/lamp.jpg"
 
 
     # load the interior image 
@@ -133,3 +138,5 @@ if __name__ == '__main__':
 
     # display the results
     codex.display_results(ref, segmented_results)
+
+
