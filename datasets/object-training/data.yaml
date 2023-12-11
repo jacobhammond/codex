@@ -3,23 +3,21 @@ train: train
 val: valid
 test: test
 
-# Classes
+# Custom trained codex objec classes
 names: 
-  0: armchair
-  1: bed
-  2: chair
-  3: clock
-  4: couch
-  5: curtain
-  6: dresser
-  7: lamp
-  8: light
-  9: pillow
-  10: plant
-  11: rug
-  12: shelf
-  13: side-table
-  14: stool
-  15: table
-  16: vase
-  17: wall-art
+  0: bed
+  1: chair
+  2: clock
+  3: couch
+  4: curtain
+  5: dresser
+  6: lamp
+  7: light
+  8: pillow
+  9: plant
+  10: rug
+  11: shelf
+  12: stool
+  13: table
+  14: vase
+  15: wall-art

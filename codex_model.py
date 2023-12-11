@@ -11,16 +11,16 @@ def train_model():
     # check if segment training run already exists (if not, train the model)
     if not os.path.exists("./runs"):
         # Load a YOLO model to train
-        model = YOLO('datasets/object-training/yolov8n-seg.pt')
+        model = YOLO('datasets/object-training/yolov8m-seg.pt')
 
         # Now train the YOLO model using the custom CODEX dataset
-        results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=50, batch=160, imgsz=640, cache=True, device="cpu", workers=30)
+        results = model.train(data='datasets/object-training/data.yaml', task='segment', epochs=100, batch=128, imgsz=640, cache=True, device="cpu", workers=30)
 
         # Export the trained model
         model.save("datasets/object-training/codex.pt")
     else:
         # apply the custom CODEX dataset to the model weights
-        model = YOLO('datasets/object-training/yolov8n-seg.pt')
+        model = YOLO('datasets/object-training/yolov8m-seg.pt')
         model = YOLO('datasets/object-training/codex.pt')
 
     # Test the model using a test codex dataset interior image
