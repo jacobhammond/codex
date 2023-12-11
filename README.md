@@ -5,7 +5,7 @@
 ## Table of Contents
 
 + [About](#about)   
-   +[The CODEX Segmentation Model](#the-codex-segmentation-model)
++ [The CODEX Segmentation Model](#about_model)
 + [Requirements](#requirements)
 + [Instructions & Usage](#instructions--usage)
 
@@ -78,7 +78,7 @@ The `codex_segmentation_v5` model and training dataset is hosted and available f
 </a>
 </p>
 
-## Requirements:  <a name = "req"></a>
+## Requirements:  <a name = "requirements"></a>
 
 This project was developed on `Python 3.11.5`. Additional packages are listed in 
 `requirements.txt` and can be installed using pip.
@@ -87,7 +87,7 @@ Addditional documentation available at
 
 (overlef)
 
-## Instructions & Usage  <a name = "instructions"></a>
+## Instructions & Usage  <a name = "instructions--usage"></a>
 Project Files: 
 
 - `codex.py` - main executable
