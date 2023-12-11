@@ -85,7 +85,7 @@ This project was developed on `Python 3.11.5`. Additional packages are listed in
 
 Addditional documentation available at
 
-(overlef)
+(technical paper link pending)
 
 ## Instructions & Usage  <a name = "instructions--usage"></a>
 Project Files: 
