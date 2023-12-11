@@ -452,7 +452,7 @@ def get_bounding_contour(image):
 def isolating_seg_objects(image):
     image = np.copy(image)
     # Load the CODEX segmentation model
-    model = YOLO("datasets/object_training/yolov8m-seg.pt")
+    model = YOLO("yolov8m-seg.pt")
     model = YOLO('codex.pt')
 
     # Run Interference and get results objects
