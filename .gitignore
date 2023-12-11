@@ -15,6 +15,7 @@ runs/
 datasets/object-training/train.cache
 datasets/object-training/validate.cache
 codex-env/
+outputs/
 
 # Distribution / packaging
 .Python
