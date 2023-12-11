@@ -2,24 +2,62 @@
 
 import cv2
 import numpy as np
+from ultralytics import YOLO
+from typing import List, Union
+import venv
 import os
 
-# global variables
+
+# Commonly used kernel sizes for general use throughout the functions
 kernel_3 = np.ones((3, 3), np.uint8)
 kernel_5 = np.ones((5, 5), np.uint8)
 kernel_7 = np.ones((7, 7), np.uint8)
 kernel_9 = np.ones((9, 9), np.uint8)
 
-# Create a class for interior reference images and their color palette
+# Define a class for interior reference image(s) and their color properties
 class InteriorPalette:
-    def __init__(self, image_file_name, image, hsv_colors, palette):
-        self.image_file_name = image_file_name
-        self.image = image
-        self.hsv_colors = hsv_colors
-        self.palette = palette
+    def __init__(
+        self,
+        image_file_name: str,
+        image: np.ndarray,
+        hsv_colors: List[List[int]],
+        palette: np.ndarray
+    ):
+        self.image_file_name = image_file_name  # original image file name
+        self.image = image  # original image
+        self.hsv_colors = hsv_colors  # list of hsv colors in image
+        self.palette = palette  # image of color palette
 
+# Define a class for object(s) of interest and their respective properties
+class ObjectOfInterest:
+    def __init__(
+        self,
+        image_file_name: str,
+        image: np.ndarray,
+        mask: np.ndarray,
+        label: str,
+        segmentation: np.ndarray,
+        hsv_colors: List[List[int]],
+        palette: np.ndarray,
+        color_match: float
+    ):
+        self.image_file_name = image_file_name  # original image file name
+        self.image = image  # original image
+        self.mask = mask  # binary mask of object
+        self.label = label  # object label (e.g. "couch") predicted by CODEX segmentation model
+        self.segmentation = segmentation  # segmentation of object (for more precise color matching)
+        self.hsv_colors = hsv_colors  # list of hsv colors in object
+        self.palette = palette  # image of color palette
+        self.color_match = color_match  # color match score of object to interior color palette
 
-# function to create a color palette of the most common colors in an image
+def setup():
+    # check if virtual environment exists, if not create it
+    if not os.path.exists('./codex-env'):
+        venv.create('./codex-env', with_pip=True)
+        os.system("source ./codex-env/bin/activate")
+        os.system("pip install -r requirements.txt")
+
+# Function to create a color palette of the most common colors in an image
 def extract_color_palette(image):
     # resize the image to fit 200x200 pixels (for faster processing)
     image = cv2.resize(image, (200, 200))
@@ -177,7 +215,7 @@ def extract_color_palette(image):
     color_list = [list(color[0]) for color in color_list]
     return palette, color_list
 
-
+# Function to create a binary mask of an image
 def get_obj_mask(image):
     # Convert the image to grayscale.
     grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -197,6 +235,16 @@ def get_obj_mask(image):
     # apply to original image to cut out objects from background
     mask = cv2.bitwise_and(image, image, mask=mask)
     return mask
+
+# Function to extract the object(s) of interest from an image and apply the CODEX segmentation model
+# returns a list of ObjectOfInterest instances
+def isolating_seg_objects(image):
+    # Load the CODEX segmentation model
+    model = YOLO("yolov8n-seg.pt")
+    #model = YOLO('datasets/object-training/codex.pt')
+
+    # Run Interference and get results objects
+    results = model.precict(image, imgsz=640, conf=0.5, visualize=True)
 
 
 
