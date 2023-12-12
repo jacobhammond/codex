@@ -114,10 +114,11 @@ if __name__ == '__main__':
     # otherwise if not provided, use a sample included in the project
     else:
         print("No input args with image files provided, using sample image set")
-        ref_file = "datasets/examples/interior5.jpg"
-        object_file = "datasets/examples/lamp.jpg"
+        ref_file = "examples/interiors/interior3.jpg"
+        object_file = "examples/objects/table.jpg"
 
 
+    
     # load the interior image 
     ref_image = cv2.imread(ref_file)
 
@@ -138,5 +139,6 @@ if __name__ == '__main__':
 
     # display the results
     codex.display_results(ref, segmented_results)
+    
 
 

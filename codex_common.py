@@ -72,7 +72,7 @@ class SegmentPalette:
         conf: float,
         hsv_colors: List[np.ndarray],
         palette: np.ndarray,
-        color_match: float
+        color_match: str
     ):
         self.image = image # extracted segmented object image
         self.crop = crop # cropped image of object
@@ -341,9 +341,6 @@ def color_score(ref_hsv_colors, obj_hsv_colors):
         ref_colors[i] = ref_colors[i] / [180, 255, 255]
     for i in range(len(obj_colors)):
         obj_colors[i] = obj_colors[i] / [180, 255, 255]
-    
-    
-
 
     # compare to neutral tones white, black, gray, brown, beige, and cream
     for neutral_color in neutral_colors_hsv:
@@ -361,14 +358,13 @@ def color_score(ref_hsv_colors, obj_hsv_colors):
             # shot distance indicates a good match, so add to score
             if dist < 0.15:
                 relative_score += 1
-    print(f"relative_score: {relative_score}")
-    print(f"neutral_score: {neutral_score}")
-    #print(f"hue_ratio: {hue_ratio}")
-    #print(f"sat_ratio: {sat_ratio}")
-    #print(f"val_ratio: {val_ratio}")
-
+    
+    if relative_score > 600:
+        match_str = "Good"
+    else:
+        match_str = "Poor"
            
-    return relative_score
+    return match_str
 
 # Function to resize images to target size, or to fit in standard viewing window and keep aspect ratio
 def resize_image(image, target=None):
@@ -567,9 +563,9 @@ def display_results(ref, seg_results):
     # iterate over each segment result
     for seg in seg_results:
         # add the label to the result image
-        cv2.putText(seg.image, f"category: {seg.label} ({int(seg.conf*100)}% conf)", (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.8, (255, 255, 255), 3, cv2.LINE_AA)
+        cv2.putText(seg.image, f"category: {seg.label} ({int(seg.conf*100)}% conf)", (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
         # add the color match to the blank image
-        cv2.putText(seg.image, f"color_match: {seg.color_match}", (30, 120), cv2.FONT_HERSHEY_SIMPLEX, 1.8, (255, 255, 255), 3, cv2.LINE_AA)
+        cv2.putText(seg.image, f"color_match: {seg.color_match}", (30, 120), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
         # resize the height of color palette to match the blank result image
         seg.palette = cv2.resize(seg.palette, (seg.image.shape[1], seg.palette.shape[0]))
         # add the segment color palette to the bottom side of the blank image
@@ -589,8 +585,6 @@ def display_results(ref, seg_results):
     # otherwise just set the result to the first segment display image
     else:
         result = resize_image(segment_display_images[0], target)
-
-    cv2.imwrite("outputs/result.jpg", result)
-    cv2.imshow("Reference Palette", ref_result)
-    cv2.imshow("Segmented Objects", result)
+    cv2.imshow("CODEX Model Segmentation", result)
+    cv2.imshow("Reference Image", ref_result)
     cv2.waitKey(0)
