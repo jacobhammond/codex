@@ -114,7 +114,7 @@ if __name__ == '__main__':
     # otherwise if not provided, use a sample included in the project
     else:
         print("No input args with image files provided, using sample image set")
-        ref_file = "examples/interiors/interior6.jpg"
+        ref_file = "examples/interiors/interior2.jpg"
         object_file = "examples/objects/curtains.jpg"
 
 

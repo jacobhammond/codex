@@ -102,7 +102,7 @@ Usage:
 
    > python codex.py <reference_image_file> <object_of_interest_image_file>
 
-  Arguments are optional. If ommited, the program will use included sample images:
+  Arguments are optional. If ommited, the program will use included sample images from `examples/`:
 
    > python codex.py
 
