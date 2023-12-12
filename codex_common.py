@@ -327,15 +327,9 @@ def extract_object_color_palette(image, mask):
 
 
 # Function to compare two color palettes and return a score of how similar they are
-def color_score(ref_hsv_colors, obj_hsv_colors):
+def color_score(ref_colors, obj_colors):
     relative_score = 0
     neutral_score = 0
-    # copy a list of colors that are in both palettes
-    ref_colors = ref_hsv_colors
-    obj_colors = obj_hsv_colors
-    # get HSV histograms of each list
-    ref_hist = cv2.calcHist([np.uint8(ref_colors)], [0, 1, 2], None, [180, 256, 256], [0, 180, 0, 256, 0, 256])
-    obj_hist = cv2.calcHist([np.uint8(obj_colors)], [0, 1, 2], None, [180, 256, 256], [0, 180, 0, 256, 0, 256])
     # HSV values are in range 0-180 for H, 0-255 for S and V, so normalize them to 0-1
     for i in range(len(ref_colors)):
         ref_colors[i] = ref_colors[i] / [180, 255, 255]
@@ -356,10 +350,10 @@ def color_score(ref_hsv_colors, obj_hsv_colors):
             # calculate the euclidean distance between current and next color (normalized)
             dist = np.linalg.norm(r_color - o_color)
             # shot distance indicates a good match, so add to score
-            if dist < 0.15:
+            if dist < 0.25:
                 relative_score += 1
     
-    if relative_score > 600:
+    if relative_score + neutral_score > 500:
         match_str = "Good"
     else:
         match_str = "Poor"

@@ -114,8 +114,8 @@ if __name__ == '__main__':
     # otherwise if not provided, use a sample included in the project
     else:
         print("No input args with image files provided, using sample image set")
-        ref_file = "examples/interiors/interior3.jpg"
-        object_file = "examples/objects/table.jpg"
+        ref_file = "examples/interiors/interior6.jpg"
+        object_file = "examples/objects/curtains.jpg"
 
 
     
@@ -135,10 +135,13 @@ if __name__ == '__main__':
     segmented_objects = codex.isolating_seg_objects(object_image)
 
     # get color matching results for segmented objects versus the reference
-    segmented_results = codex.color_match(ref, segmented_objects)
-
-    # display the results
-    codex.display_results(ref, segmented_results)
+    if len(segmented_objects) > 0:
+        segmented_results = codex.color_match(ref, segmented_objects)
+        # display the results
+        codex.display_results(ref, segmented_results)
+    else:
+        print("No objects detected in image, please try again with a different image")
+        sys.exit(1)
     
 
 
