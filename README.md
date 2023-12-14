@@ -90,10 +90,10 @@ Project Files:
 
 - `codex.py` - main executable
 - `codex_common.py` - common functions used by codex.py
-- `codex_model.py` - model training and testing functions
-- `examples` - directory for example inputs 
+- `codex_model.py` - model training and testing functions (for reference only)
+- `examples/` - directory for example inputs 
 - `codex.pt` - CODEX segmentation model 
-- `yolov8m-seg.py` - YOLOv8 MS COCO Pre-trained segmentation model
+- `yolov8m-seg.pt` - YOLOv8 MS COCO Pre-trained segmentation model
 - `requirements.txt` - list of dependencies
 
 Usage:
