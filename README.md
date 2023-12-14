@@ -83,9 +83,7 @@ The `codex_segmentation_v5` model and training dataset is hosted and available f
 This project was developed on `Python 3.11.5`. Additional packages are listed in 
 `requirements.txt` and can be installed using pip.
 
-Addditional documentation available at
-
-(technical paper link pending)
+Please see `CODEX Report.pdf` for additional documentation, approach, methods, and results. 
 
 ## Instructions & Usage  <a name = "instructions--usage"></a>
 Project Files: 
